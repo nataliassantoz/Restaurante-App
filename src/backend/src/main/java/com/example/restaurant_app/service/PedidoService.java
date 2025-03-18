@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.example.restaurant_app.entitys.Pedido;
+import com.example.restaurant_app.entitys.StatusPedido;
 import com.example.restaurant_app.repository.PedidoRepository;
 
 @Service
@@ -31,7 +32,7 @@ public class PedidoService {
 
             Pedido pedidoExistente = pedidoOptional.get(); // Obtém o pedido existente
             pedidoExistente.setCliente(pedidoAtualizado.getCliente());
-            pedidoExistente.setPrato(pedidoAtualizado.getPrato());
+            pedidoExistente.setPratos(pedidoAtualizado.getPratos());
             pedidoExistente.setStatus(pedidoAtualizado.getStatus());
 
             return pedidoRepository.save(pedidoExistente);
@@ -39,26 +40,21 @@ public class PedidoService {
         return null;
     }
 
-    public Pedido buscarPedidoId(long id){
-        return  pedidoRepository.findById(id).orElse(null);
+    public Optional<Pedido> buscarPedidoId(long id){
+        return  pedidoRepository.findById(id);
     }
 
     public void deletarPedido(Long id){
        pedidoRepository.deleteById(id);
     }
 
-    public Pedido atualizarStatus(Long id, String novoStatus){
-        Optional<Pedido> pedidoOptional = pedidoRepository.findById(id);
+    public void finalizarPedido(){
 
-        if( pedidoOptional.isPresent()){
-            Pedido pedido = pedidoOptional.get();
-            pedido.setStatus(novoStatus);
-            return pedidoRepository.save(pedido);
-        }
-        return null;
     }
 
-    public List<Pedido> listarPedidosPorStatus(String status) {
+    public List<Pedido> listarPedidosPorStatus(StatusPedido status) {
         return pedidoRepository.findByStatus(status);
     }
+
+    
 }
